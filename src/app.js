@@ -61,6 +61,9 @@ iframe.onload = function() {
   // Add a context menu
   menus.injectContextMenu(win, iframe.contentWindow, iframe.contentDocument);
 
+  // Remove the blinking cursor
+  windowBehaviour.removeBlinkingCursor(win, iframe.contentWindow);
+
   // Bind native events to the content window
   windowBehaviour.bindEvents(win, iframe.contentWindow);
 

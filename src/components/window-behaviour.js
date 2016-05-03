@@ -86,14 +86,40 @@ module.exports = {
    * Bind the events of the node window to the content window.
    */
   bindEvents: function(win, contentWindow) {
+    var self = this;
+
     ['focus', 'blur'].forEach(function(name) {
       win.removeAllListeners(name);
       win.on(name, function() {
         if (contentWindow.dispatchEvent && contentWindow.Event) {
           contentWindow.dispatchEvent(new contentWindow.Event(name));
         }
+
+        if (name === 'focus') {
+            self.addBlinkingCursor(win, contentWindow);
+        }
+
+        if (name === 'blur') {
+            self.removeBlinkingCursor(win, contentWindow);
+        }
       });
     });
+  },
+
+  /**
+   * Add the blinking cursor back to the textarea
+   */
+  addBlinkingCursor: function(win, contentWindow) {
+    var textarea = contentWindow.document.querySelector('[contenteditable="false"][role="textbox"]');
+    textarea.setAttribute('contenteditable', 'true');
+  },
+
+  /**
+   * Remove the blinking cursor from the textarea
+   */
+  removeBlinkingCursor: function(win, contentWindow) {
+    var textarea = contentWindow.document.querySelector('[contenteditable="true"][role="textbox"]');
+    textarea.setAttribute('contenteditable', 'false');
   },
 
   /**
